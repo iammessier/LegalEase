@@ -2,9 +2,11 @@ import CreateNewAccount from '../components/component/create-new-account';
 import LoginPage from '@/components/component/login-page';
 import ForgotPassword from '@/components/component/forgot-password';
 import { UserPage } from '@/components/component/user-page';
+import LegaleaseLanding from '@/components/component/legalease-landing';
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-[#0a0e27] justify-between p-24">
+      <LegaleaseLanding />
       <CreateNewAccount />
       <LoginPage />
       <ForgotPassword />
