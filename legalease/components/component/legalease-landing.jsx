@@ -37,11 +37,13 @@ const LegaleaseLanding= () => {
             href="#">
             Contact
           </Link>
+          <Link href = "/login">
           <Button
             variant="outline"
             className="bg-white/50 hover:bg-white/80 transition-colors">
             Login
           </Button>
+          </Link>
         </nav>
       </header>
       <main className="flex-1 w-full">

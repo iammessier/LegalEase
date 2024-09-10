@@ -6,13 +6,12 @@ import ClientSignup from '@/components/component/client-signup';
 import { LawStudentSignup } from '@/components/component/law-student-signup';
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center bg-[#0a0e27] justify-between p-24">
+    <main>
       <LegaleaseLanding />
-      <LoginPage />
-      <ClientSignup />
+      {/* <ClientSignup />
       <LawStudentSignup />
       <ForgotPassword />
-      <UserPage />
+      <UserPage /> */}
     </main>
   );
 }
