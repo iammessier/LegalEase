@@ -1,19 +1,29 @@
 'use client'
 
 import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { GavelIcon, ArrowRightIcon } from "lucide-react"
+import { GavelIcon, ArrowRightIcon, XIcon } from "lucide-react"
 import Link from "next/link"
 
 const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
     // Handle login logic here
     console.log('Login attempted with:', email, password)
+  }
+
+  const openSignUpModal = () => {
+    setIsSignUpModalOpen(true)
+  }
+
+  const closeSignUpModal = () => {
+    setIsSignUpModalOpen(false)
   }
 
   return (
@@ -50,23 +60,38 @@ const LoginPage = () => {
         </nav>
       </header>
       <main className="flex-1 w-full flex items-center justify-center px-4 py-12">
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           className="w-full max-w-md space-y-8 bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl">
           <div className="text-center">
-            <h2
+            <motion.h2
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
               className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">
               Sign in to your account
-            </h2>
-            <p className="mt-2 text-sm text-gray-600">
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="mt-2 text-sm text-gray-600">
               Or{' '}
-              <Link
-                href="/signup"
-                className="font-medium text-purple-600 hover:text-purple-500">
+              <button
+                onClick={openSignUpModal}
+                className="font-medium text-purple-600 hover:text-purple-500 focus:outline-none">
                 create a new account
-              </Link>
-            </p>
+              </button>
+            </motion.p>
           </div>
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <motion.form
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="mt-8 space-y-6"
+            onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -129,8 +154,8 @@ const LoginPage = () => {
                 <ArrowRightIcon className="ml-2 h-4 w-4" />
               </Button>
             </div>
-          </form>
-        </div>
+          </motion.form>
+        </motion.div>
       </main>
       <footer
         className="w-full flex flex-col gap-2 sm:flex-row py-6 shrink-0 items-center px-4 md:px-6 border-t bg-white/50 backdrop-blur-sm">
@@ -144,6 +169,46 @@ const LoginPage = () => {
           </Link>
         </nav>
       </footer>
+      <AnimatePresence>
+        {isSignUpModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 15 }}
+              className="bg-white rounded-lg p-8 max-w-md w-full">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold text-gray-900">Choose Sign Up Option</h3>
+                <button onClick={closeSignUpModal} className="text-gray-400 hover:text-gray-500">
+                  <XIcon className="h-6 w-6" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <Link href="/signup/user" className="block w-full">
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                    Sign Up as User
+                  </Button>
+                </Link>
+                <Link href="/signup/law-student" className="block w-full">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    Sign Up as Law Student
+                  </Button>
+                </Link>
+                <Link href="/signup/legal-professional" className="block w-full">
+                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
+                    Sign Up as Legal Professional
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>)
   );
 }
