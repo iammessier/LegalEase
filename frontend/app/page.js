@@ -34,7 +34,7 @@ const LegaleaseLanding= () => {
           </Link>
           <Link
             className="text-sm font-medium hover:text-purple-600 transition-colors"
-            href="#">
+            href="">
             Contact
           </Link>
           <Link href = "/login">
@@ -123,7 +123,7 @@ const LegaleaseLanding= () => {
               <div className="w-full max-w-sm space-y-2">
                 <form className="flex space-x-2">
                   <Input
-                    className="max-w-lg flex-1 bg-white/10 backdrop-blur-sm text-white placeholder-white/70"
+                    className="max-w-lg bg-white/10 backdrop-blur-sm text-white placeholder-white/70"
                     placeholder="Enter your email"
                     type="email" />
                   <Button
