@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { GavelIcon, ArrowRightIcon, UploadIcon } from "lucide-react"
 import Link from "next/link"
 
-export function LawStudentSignup() {
+const LawStudentSignup = () =>  {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -307,3 +307,4 @@ export function LawStudentSignup() {
     </div>)
   );
 }
+export default LawStudentSignup;
