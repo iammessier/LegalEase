@@ -13,7 +13,7 @@ const initialState = {
   error: null,
 }
 
-const LoginPage = () => {
+export function Page() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false)
@@ -223,4 +223,3 @@ const LoginPage = () => {
     </div>)
   );
 }
-export default LoginPage;
