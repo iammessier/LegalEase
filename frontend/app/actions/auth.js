@@ -1,7 +1,6 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 
 export async function login(prevState, formData) {
   const email = formData.get('email')
@@ -14,29 +13,28 @@ export async function login(prevState, formData) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
     })
-    
-    console.log('Response status:', response.status)
+
     const data = await response.json()
-    console.log('Response data:', data)
-    
 
     if (!response.ok) {
-      return { error: data.error }
+      return { error: data.error || 'An error occurred during login' }
     }
 
-    // If 'remember me' is checked, set a longer expiration for the cookie
-    if (remember === 'on') {
-      cookies().set('token', data.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 30 * 24 * 60 * 60, // 30 days 
-        path: '/',
-      })
+    // Set the token in cookies based on the "remember me" checkbox
+    const tokenOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: remember === 'on' ? 30 * 24 * 60 * 60 : 3600, // 30 days or 1 hour
     }
 
-    redirect('/user-dashboard')
+    cookies().set('token', data.token, tokenOptions)
+
+    // Return success message without redirecting here
+    return { success: true, user: data.user }
   } catch (error) {
+    console.error('Login error:', error)
     return { error: 'An unexpected error occurred' }
   }
 }
