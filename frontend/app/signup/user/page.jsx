@@ -14,14 +14,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 const ClientSignup = () => {
   const router = useRouter()
   const [formData, setFormData] = useState({
-    fullName: '',
+    name: '',
     email: '',
     phone: '',
     location: '',
     username: '',
     password: '',
     confirmPassword: '',
-    agreeTerms: false
+    agreeTerms: false,
+    role: 'user'
   })
   const [verificationSent, setVerificationSent] = useState(false)
   const [verificationCode, setVerificationCode] = useState('')
@@ -129,14 +130,14 @@ const ClientSignup = () => {
                     <div className="relative">
                       <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                       <Input
-                        id="fullName"
-                        name="fullName"
+                        id="name"
+                        name="name"
                         type="text"
                         required
-                        value={formData.fullName}
+                        value={formData.name}
                         onChange={handleInputChange}
                         className="pl-10"
-                        placeholder="Jay Nahata"
+                        placeholder="Enter your full name"
                       />
                     </div>
                   </div>

@@ -1,27 +1,54 @@
-// pages/api/auth/signup.js
-import { sendVerificationEmail } from '@/utils/emailService'
+import { NextResponse } from 'next/server';
+import { sendVerificationEmail } from '@/utils/emailService';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
-export default async function handler(req, res) {
-  const { fullName, email, password, username } = req.body
+const prisma = new PrismaClient();
 
-  // Validate the inputs (add more as necessary)
-  if (!email || !password || !fullName || !username) {
-    return res.status(400).json({ error: 'Missing required fields' })
-  }
-
+export async function POST(request) {
   try {
-    // Logic to save the user to your database (MongoDB, PostgreSQL, etc.)
-    
-    // Send verification code via email
-    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
-    await sendVerificationEmail(email, verificationCode)
-    
-    // Save verification code to the database or in-memory store (like Redis)
-    // You can link the code with the user's email in a table.
+    const { name, email, password, role } = await request.json();
 
-    res.status(200).json({ message: 'Verification email sent' })
+    // Validate the inputs
+    if (!email || !password || !name || !role) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findFirst({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return NextResponse.json({ error: 'User already exists' }, { status: 400 });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Generate verification code
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Create user in the database
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role,
+        verificationCode,
+        isVerified: false,
+      },
+    });
+
+    // Send verification email
+    await sendVerificationEmail(email, verificationCode);
+
+    return NextResponse.json({ message: 'Verification email sent' }, { status: 200 });
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Failed to send verification email' })
+    console.error('Signup error:', error);
+    return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 }
