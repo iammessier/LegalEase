@@ -8,11 +8,25 @@ generator client {
 }
 
 model User {
+  id               Int              @id @default(autoincrement())
+  email            String           @unique
+  name             String
+  password         String
+  role             String
+  verificationCode String?          // Nullable since it will be null after verification
+  isVerified       Boolean          @default(false)
+  
+  // Relation to PasswordReset model
+  passwordResets   PasswordReset[]  // A user can have multiple password reset records
+}
+
+model PasswordReset {
   id                Int      @id @default(autoincrement())
-  email             String   @unique
-  name              String
-  password          String
-  role              String
-  verificationCode  String?  // Nullable since it will be null after verification
-  isVerified        Boolean  @default(false)
+  token             String   @unique // Unique token for password reset
+  expiresAt         DateTime // Expiration timestamp for the token
+  userId            Int      // Foreign key reference to User table
+
+  user              User     @relation(fields: [userId], references: [id])  // Relation to User model
+
+  createdAt         DateTime @default(now()) // Timestamp for when the reset record was created
 }

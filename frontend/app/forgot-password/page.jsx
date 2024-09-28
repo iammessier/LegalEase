@@ -7,37 +7,79 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { GavelIcon, ArrowRightIcon, LockIcon } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from 'next/navigation'
 
-const ForgotPassword= ()=> {
+const ForgotPassword = () => {
+  const router = useRouter()
   const [email, setEmail] = useState('')
-  const [otp, setOtp] = useState('')
+  const [token, setToken] = useState('')
   const [newPassword, setNewPassword] = useState('')
+  const [step, setStep] = useState('request') // 'request' or 'reset'
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleRequestReset = async (e) => {
     e.preventDefault()
-    // Handle password reset logic here
-    console.log('Password reset attempted with:', { email, otp, newPassword })
+    setError('')
+    setSuccess('')
+
+    try {
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setSuccess('Password reset email sent. Please check your inbox.')
+        setStep('reset')
+      } else {
+        setError(data.error || 'An error occurred')
+      }
+    } catch (error) {
+      setError('An unexpected error occurred')
+    }
+  }
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+
+    try {
+      const response = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, newPassword }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setSuccess('Password reset successful')
+        setTimeout(() => router.push('/login'), 2000)
+      } else {
+        setError(data.error || 'An error occurred')
+      }
+    } catch (error) {
+      setError('An unexpected error occurred')
+    }
   }
 
   return (
-    (<div
-      className="min-h-screen w-full bg-gradient-to-br from-purple-100 to-blue-100 flex flex-col">
-      <header
-        className="w-full px-4 lg:px-6 h-16 flex items-center justify-between backdrop-blur-sm bg-white/30 sticky top-0 z-50">
+    <div className="min-h-screen w-full bg-gradient-to-br from-purple-100 to-blue-100 flex flex-col">
+      <header className="w-full px-4 lg:px-6 h-16 flex items-center justify-between backdrop-blur-sm bg-white/30 sticky top-0 z-50">
         <Link className="flex items-center justify-center" href="/">
           <GavelIcon className="h-6 w-6 mr-2 text-purple-600" />
-          <span
-            className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">Legalease</span>
+          <span className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">Legalease</span>
         </Link>
         <nav className="flex gap-4 sm:gap-6 items-center">
-          <Link
-            className="text-sm font-medium hover:text-purple-600 transition-colors"
-            href="/">
+          <Link className="text-sm font-medium hover:text-purple-600 transition-colors" href="/">
             Home
           </Link>
-          <Link
-            className="text-sm font-medium hover:text-purple-600 transition-colors"
-            href="/login">
+          <Link className="text-sm font-medium hover:text-purple-600 transition-colors" href="/login">
             Login
           </Link>
         </nav>
@@ -49,14 +91,16 @@ const ForgotPassword= ()=> {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             className="w-full md:w-1/2 text-gray-800">
-            <h1
-              className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">Forgot Your Password?</h1>
+            <h1 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">
+              Forgot Your Password?
+            </h1>
             <h2 className="text-2xl mb-4 text-gray-700">No worries, we've got you covered</h2>
             <p className="mb-6 text-gray-600">
-              Enter your email address, the OTP sent to you, and your new password. We'll help you regain access to your account in no time.
+              {step === 'request'
+                ? "Enter your email address and we'll send you instructions to reset your password."
+                : "Enter the token from your email and your new password to complete the reset process."}
             </p>
-            <Button
-              className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300">
+            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300">
               Learn More About Account Security
               <ArrowRightIcon className="ml-2 h-4 w-4" />
             </Button>
@@ -74,60 +118,75 @@ const ForgotPassword= ()=> {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                      Email Address
-                    </label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="bg-white/50 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                      required />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="otp" className="text-sm font-medium text-gray-700">
-                      One-Time Password (OTP)
-                    </label>
-                    <Input
-                      id="otp"
-                      type="text"
-                      placeholder="Enter OTP"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      className="bg-white/50 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                      required />
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="new-password" className="text-sm font-medium text-gray-700">
-                      New Password
-                    </label>
-                    <Input
-                      id="new-password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="bg-white/50 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                      required />
-                  </div>
-                  <Button
-                    type="submit"
-                    className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300">
-                    Reset Password
-                    <ArrowRightIcon className="ml-2 h-4 w-4" />
-                  </Button>
-                </form>
+                {step === 'request' ? (
+                  <form onSubmit={handleRequestReset} className="space-y-4">
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                        Email Address
+                      </label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="bg-white/50 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                        required
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300">
+                      Send Reset Instructions
+                      <ArrowRightIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleResetPassword} className="space-y-4">
+                    <div className="space-y-2">
+                      <label htmlFor="token" className="text-sm font-medium text-gray-700">
+                        Reset Token
+                      </label>
+                      <Input
+                        id="token"
+                        type="text"
+                        placeholder="Enter token from email"
+                        value={token}
+                        onChange={(e) => setToken(e.target.value)}
+                        className="bg-white/50 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="new-password" className="text-sm font-medium text-gray-700">
+                        New Password
+                      </label>
+                      <Input
+                        id="new-password"
+                        type="password"
+                        placeholder="••••••••"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="bg-white/50 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                        required
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-300">
+                      Reset Password
+                      <ArrowRightIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                  </form>
+                )}
+                {error && <p className="mt-4 text-red-500 text-sm">{error}</p>}
+                {success && <p className="mt-4 text-green-500 text-sm">{success}</p>}
               </CardContent>
             </Card>
           </motion.div>
         </div>
       </main>
-      <footer
-        className="w-full flex flex-col gap-2 sm:flex-row py-6 shrink-0 items-center px-4 md:px-6 border-t bg-white/50 backdrop-blur-sm">
+      <footer className="w-full flex flex-col gap-2 sm:flex-row py-6 shrink-0 items-center px-4 md:px-6 border-t bg-white/50 backdrop-blur-sm">
         <p className="text-xs text-gray-600">© 2023 Legalease. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:text-purple-600 transition-colors" href="#">
@@ -138,7 +197,8 @@ const ForgotPassword= ()=> {
           </Link>
         </nav>
       </footer>
-    </div>)
-  );
+    </div>
+  )
 }
-export default ForgotPassword;
+
+export default ForgotPassword

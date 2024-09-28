@@ -26,18 +26,18 @@ export async function POST(request) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate verification code
+    // Generate verification code (OTP)
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Create user in the database
+    // Create user in the database with verificationCode
     const newUser = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
         role,
-        verificationCode,
-        isVerified: false,
+        isVerified: false, // keep isVerified as false since user is new
+        verificationCode,   // Save the verification code here
       },
     });
 

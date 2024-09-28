@@ -114,7 +114,7 @@ const ClientSignup = () => {
           <Card className="w-full bg-white/80 backdrop-blur-sm shadow-xl">
             <CardHeader className="text-center">
               <CardTitle className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600">
-                {verificationSent ? 'Verify Your Email' : 'Sign Up for Legal Advice'}
+                {verificationSent ? 'Verify Your Email' : 'Sign Up '}
               </CardTitle>
               <CardDescription>
                 {verificationSent

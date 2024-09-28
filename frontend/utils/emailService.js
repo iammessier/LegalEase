@@ -26,3 +26,23 @@ export async function sendVerificationEmail(email, verificationCode) {
     throw error;
   }
 }
+
+export async function sendPasswordResetEmail(email, resetToken) {
+  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
+
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to: email,
+    subject: 'Reset Your Password for Legalease',
+    text: `Please use the following link to reset your password: ${resetUrl}`,
+    html: `<p>Please use the following link to reset your password: <a href="${resetUrl}">${resetUrl}</a></p>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Password reset email sent successfully');
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    throw error;
+  }
+}
