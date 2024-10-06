@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import nodemailer from 'nodemailer'; 
-import crypto from 'crypto'; // For generating a secure token
+import crypto from 'crypto'; 
 
 const prisma = new PrismaClient();
 
@@ -35,7 +35,7 @@ export async function POST(request) {
             service: 'gmail',
             auth: {
                 user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASSWORD
+                pass: process.env.EMAIL_PASS
             }
         });
 
