@@ -43,7 +43,7 @@ export async function POST(request) {
             from: process.env.EMAIL_USER,
             to: email,
             subject: 'Your Password Reset Token',
-            text: `Your password reset token is ${token}. It is valid for 1 hour.`
+            text: `Your password reset token is ${token} It is valid for 1 hour.`
         };
 
         await transporter.sendMail(mailOptions);

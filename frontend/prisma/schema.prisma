@@ -12,21 +12,49 @@ model User {
   email            String           @unique
   name             String
   password         String
-  role             String
-  verificationCode String?          // Nullable since it will be null after verification
+  role             UserRole
+  verificationCode String?
   isVerified       Boolean          @default(false)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
   
-  // Relation to PasswordReset model
-  passwordResets   PasswordReset[]  // A user can have multiple password reset records
+  // Relationships
+  passwordResets   PasswordReset[]
+  lawStudentProfile LawStudentProfile?
 }
 
 model PasswordReset {
-  id                Int      @id @default(autoincrement())
-  token             String   @unique // Unique token for password reset
-  expiresAt         DateTime // Expiration timestamp for the token
-  userId            Int      // Foreign key reference to User table
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 
-  user              User     @relation(fields: [userId], references: [id])  // Relation to User model
+  // Index for faster lookups
+  @@index([token])
+  
+  // Relationship
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+}
 
-  createdAt         DateTime @default(now()) // Timestamp for when the reset record was created
+model LawStudentProfile {
+  id                  Int      @id @default(autoincrement())
+  phone               String?
+  school              String
+  yearOfStudy         String
+  legalSpecialization String
+  languagesSpoken     String
+  resumeUrl           String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relationship
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              Int      @unique
+}
+
+enum UserRole {
+  CLIENT
+  LAW_STUDENT
+  ADMIN
 }
