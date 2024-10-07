@@ -26,7 +26,7 @@ import { motion } from 'framer-motion'
 const LawStudentSignup = () => {
   const router = useRouter()
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
     phone: '',
     school: '',
@@ -38,7 +38,7 @@ const LawStudentSignup = () => {
     languagesSpoken: '',
     resumeLink: '',
     agreeTerms: false,
-    role: 'LAW_STUDENT'
+    role: 'law_student'
   })
   const [verificationSent, setVerificationSent] = useState(false)
   const [verificationCode, setVerificationCode] = useState('')
@@ -67,7 +67,7 @@ const LawStudentSignup = () => {
     }
 
     try {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch('/api/auth/signup/law-student', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -159,11 +159,11 @@ const LawStudentSignup = () => {
                         className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                         size={18} />
                       <Input
-                        id="name"
-                        name="name"
+                        id="fullName"
+                        name="fullName"
                         type="text"
                         required
-                        value={formData.fulNamel}
+                        value={formData.fullName}
                         onChange={handleInputChange}
                         className="pl-10"
                         placeholder="Jay Nahata" />
@@ -403,4 +403,4 @@ const LawStudentSignup = () => {
   );
 }
 
-export default LawStudentSignup;
+export default LawStudentSignup
