@@ -22,7 +22,7 @@ const ClientSignup = () => {
     password: '',
     confirmPassword: '',
     agreeTerms: false,
-    role: 'user'
+    role: 'CLIENT'
   })
   const [verificationSent, setVerificationSent] = useState(false)
   const [verificationCode, setVerificationCode] = useState('')

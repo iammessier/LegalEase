@@ -19,6 +19,7 @@ export default function UserPage() {
   const [legalTopic, setLegalTopic] = useState('')
   const [questionTitle, setQuestionTitle] = useState('')
   const [questionDescription, setQuestionDescription] = useState('')
+  const [expandedResources, setExpandedResources] = useState(null)
 
   const handleSubmitQuestion = (e) => {
     e.preventDefault()
@@ -26,8 +27,12 @@ export default function UserPage() {
     console.log('Question submitted:', { legalTopic, questionTitle, questionDescription })
   }
 
+  const toggleResources = (resource) => {
+    setExpandedResources(expandedResources === resource ? null : resource);
+  }
+
   return (
-    (<div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100">
       <header
         className="w-full px-4 lg:px-6 h-16 flex items-center justify-between backdrop-blur-sm bg-white/30 sticky top-0 z-50">
         <Link className="flex items-center justify-center" href="/">
@@ -161,13 +166,175 @@ export default function UserPage() {
               <Input placeholder="Search legal documents..." className="mb-4" />
               <h3 className="font-semibold mb-2">Popular Resources</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                {['Tenant Rights Guide', 'Small Business Regulations', 'Divorce Proceedings Overview', 'Criminal Law Basics'].map((resource, index) => (
-                  <Button key={index} variant="outline" className="justify-start">
-                    <BookOpenIcon className="h-4 w-4 mr-2" />
-                    {resource}
-                  </Button>
-                ))}
+                <Button 
+                  variant="outline"
+                  className="justify-start w-full bg-white text-black border border-gray-300"
+                  onClick={() => toggleResources('tenantRights')}>
+                  <BookOpenIcon className="h-4 w-4 mr-2" />
+                  Tenant Rights Guide
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="justify-start w-full bg-white text-black border border-gray-300"
+                  onClick={() => toggleResources('Small Business Regulations')}>
+                  <BookOpenIcon className="h-4 w-4 mr-2" />
+                  Small Business Regulations
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="justify-start w-full bg-white hover:bg-white hover:text-black text-black border border-gray-300"
+                  onClick={() => toggleResources('NDPS')}>
+                  <BookOpenIcon className="h-4 w-4 mr-2" />
+                  NDPS
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="justify-start w-full bg-white hover:bg-white hover:text-black text-black border border-gray-300"
+                  onClick={() => toggleResources('Traffic Rules')}>
+                  <BookOpenIcon className="h-4 w-4 mr-2" />
+                  Traffic Rules
+                </Button>
               </div>
+
+              {expandedResources === 'tenantRights' && (
+                <div className="mt-4 p-4 border border-gray-200 rounded-lg">
+                  <h3 className="font-bold text-black mb-2"><strong>Rent:</strong></h3>
+                   <p className="text-black mb-4">
+                   If a landlord doesn't accept rent or provide a receipt,
+                    or if there's uncertainty about who should receive the rent,
+                    tenants can deposit the rent with the Rent Controlling Authority. 
+                    This relieves the tenant of their obligation to pay the landlord.
+                   </p>
+                   <h3 className="font-bold text-black mb-2">Notice</h3>
+                  <p className="text-black mb-4">
+                    Tenants must provide notice to their landlord before vacating the premises,
+                     as specified in the tenancy contract. If there's no contract or no notice provision, 
+                     tenants should provide at least one month's notice.
+                  </p>
+                  <h3 className="font-bold text-black mb-2">Sub-letting</h3>
+                  <p className="text-black">
+                    Tenants can't sub-let or transfer their tenancy rights without the landlord's written consent.
+                  </p>
+                </div> 
+              )}
+              
+              {expandedResources === 'NDPS' && (
+                 <div className="p-4 mt-2 bg-white border shadow-md">
+                 <h3 className="font-bold text-black mb-4">NDPS</h3>
+                 <p className="text-black">
+                 The Narcotic Drugs and Psychotropic Substances (NDPS) Act, 1985, is an Act of the Parliament of India that prohibits a person from producing,
+                  manufacturing, possessing, selling, purchasing, transporting, storing, and distributing any narcotic drug 
+                  or psychotropic substance. The Act extends to the whole of India, including the state of Madhya Pradesh.
+                  In Madhya Pradesh, the NDPS Act is supplemented by various rules and regulations, including:
+                 </p>
+                 <h3 className="font-bold text-black mb-4">The Madhya Pradesh Narcotic Drugs and Psychotropic Substances Rules, 1989:</h3>
+                 <p className="text-black">
+                  These rules provide for the implementation of the NDPS Act in the state of Madhya Pradesh.
+                  They cover aspects such as the licensing of opium cultivators, the regulation of opium trade,
+                  and the disposal of seized drugs.
+                 </p>
+                 <h3 className="font-bold text-black mb-4">The Madhya Pradesh Excise Act, 1915:</h3>
+                 <p className="text-black">
+                 Although primarily an excise law, this Act also deals with certain aspects of drug control,
+                 including the regulation of intoxicating drugs and the punishment for offenses related to drug abuse
+                 </p>
+               </div>
+              )}
+              {expandedResources === 'Small Business Regulations' && (
+                 <div className="p-4 mt-2 bg-white border shadow-md">
+                 <h3 className="font-bold text-black mb-4">Small Business Regulations</h3>
+                 <p className="text-black">
+                 To start a small business in Madhya Pradesh, you need to follow certain regulations
+                  and obtain necessary licenses and registrations. Here are the key steps:
+                 </p>
+                 <h3 className="font-bold text-black mb-4">Obtain a Trade License:</h3>
+                 <p className="text-black">
+                 you need to obtain a trade license from the local municipal
+                corporation or municipality to operate your business legally.
+                 </p>
+                 <h3 className="font-bold text-black mb-4">Register Your Business:</h3>
+                 <p className="text-black">
+                 You need to register your business with the Registrar of Firms (RoF) or the Shops and Establishments Act, 
+                 depending on the type of business you are starting.
+                 </p>
+               </div>
+              )}
+              {expandedResources === 'Traffic Rules' && (
+                 <div className="p-4 mt-2 bg-white border shadow-md">
+                 <h3 className="font-bold text-black mb-4">Traffic Rules</h3>
+                 <p className="text-black">
+                 In India, traffic rules and regulations are governed by the Motor Vehicles Act, 1988,
+                 and the Central Motor Vehicles Rules, 1989. Here are some key traffic rules and regulations in India,
+                 including fast lanes and overtaking regulations:
+                 </p>
+                 <p className="text-black">
+                 ** General Traffic Rules**:
+
+Drive on the Left: In India, vehicles must drive on the left side of the road.
+
+Right-Hand Traffic: In India, traffic keeps to the right, except when overtaking.
+
+Speed Limits: Speed limits vary by state and type of vehicle, but generally, the maximum speed limit is 120 km/h on highways and 50 km/h in urban areas.
+
+Use of Horns: Horns should only be used when necessary, and not in silent zones or between 10 pm and 6 am.
+
+Use of Headlights: Headlights must be used at night, and dimmed when approaching oncoming traffic.
+
+Fast Lanes and Overtaking:
+
+Fast Lanes: Fast lanes are designated for faster-moving traffic, and slower-moving vehicles should keep to the left lane.
+
+Overtaking: Overtaking is allowed on the right side, except when the vehicle in front is signaling to turn right or is stationary.
+
+Lane Discipline: Vehicles must stay in their designated lane, and not change lanes without signaling.
+
+Use of Indicators: Indicators must be used when changing lanes or turning.
+
+Overtaking Prohibited: Overtaking is prohibited in certain areas, such as near schools, hospitals, and construction zones.
+
+Additional Regulations:
+
+Seat Belts: Seat belts are mandatory for drivers and front-seat passengers.
+
+Helmets: Helmets are mandatory for two-wheeler riders and pillion riders.
+
+Mobile Phone Use: Mobile phone use while driving is prohibited.
+
+Parking: Parking is prohibited in certain areas, such as near traffic signals, pedestrian crossings, and bus stops.
+
+Penalties for Violating Traffic Rules:
+
+Penalties for violating traffic rules in India vary by state, but can include fines, imprisonment, or both.
+
+Myths About Traffic Rules in India:
+
+Myth: Traffic rules are not enforced in India.: Reality: Traffic rules are enforced in India, and violators can face penalties.
+
+Myth: Traffic rules are not clear in India.: Reality: Traffic rules are clear in India, and are governed by the Motor Vehicles Act, 1988, and the Central Motor Vehicles Rules, 1989.
+
+City-Based Traffic Laws in India:
+
+Delhi: In Delhi, there are specific rules for parking, and vehicles are not allowed to park in certain areas.
+
+Mumbai: In Mumbai, there are specific rules for using high-beam headlights, and vehicles are not allowed to use high-beam headlights in certain areas.
+
+Chennai: In Chennai, there are specific rules for borrowing a car, and the owner of the car must be informed.
+
+Kolkata: In Kolkata, there are specific rules for parking in front of public utility buildings or service spots.
+
+Lane Driving Regulations in India:
+
+Regulations Related to Driving: Drivers must keep to the left, and not drive against the flow of traffic.
+
+Regulations Related to Overtaking: Overtaking is allowed on the right side, except when the vehicle in front is signaling to turn right or is stationary.
+
+Regulations Related to Taking Turns: Drivers must signal before taking a turn, and must give way to pedestrians and other vehicles.
+
+Remember to always follow traffic rules and regulations to ensure your safety and the safety of others on the road.
+                 </p>
+               </div>
+              )}
+
               <h3 className="font-semibold mb-2">Categories</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {['Family Law', 'Business Law', 'Property Law', 'Criminal Law', 'Employment Law', 'Immigration Law'].map((category, index) => (
@@ -371,6 +538,6 @@ export default function UserPage() {
           </Link>
         </nav>
       </footer>
-    </div>)
+    </div>
   );
 }
