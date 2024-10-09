@@ -13,7 +13,7 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
         }
 
-        // Using raw SQL to find the user
+        //to find user
         const user = await prisma.$queryRaw`SELECT * FROM "User" WHERE email = ${email}`;
         
         if (!user || user.length === 0) {
@@ -41,7 +41,7 @@ export async function POST(request) {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
-            maxAge: 3600, // 1 hour
+            maxAge: 3600,
             path: '/',
         });
 

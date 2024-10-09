@@ -8,7 +8,7 @@ export async function POST(request) {
     try {
         const { email, token, newPassword } = await request.json();
 
-        // Using raw SQL to find the reset token
+        //to find the reset token 
         const passwordReset = await prisma.$queryRaw`
             SELECT "PasswordReset".*, "User".* FROM "PasswordReset"
             JOIN "User" ON "User".id = "PasswordReset"."userId"
@@ -21,15 +21,15 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Invalid or expired token' }, { status: 400 });
         }
 
-        // Hash the new password
+        //to hash the paswdd
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update user's password in User table
+        //to update user passwd
         await prisma.$executeRaw`
             UPDATE "User" SET password = ${hashedPassword} WHERE id = ${passwordReset[0].userId}
         `;
 
-        // Optionally delete the token after use
+        //to delete token after use
         await prisma.$executeRaw`
             DELETE FROM "PasswordReset" WHERE id = ${passwordReset[0].id}
         `;

@@ -9,7 +9,7 @@ export async function POST(request) {
     try {
         const { email } = await request.json();
 
-        // Using raw SQL for user lookup
+        //to lookup
         const user = await prisma.$queryRaw`SELECT * FROM "User" WHERE email = ${email}`;
 
         if (!user || user.length === 0) {
@@ -18,13 +18,13 @@ export async function POST(request) {
 
         const token = crypto.randomBytes(32).toString('hex');
 
-        // Insert reset token into PasswordReset table
+        //insert reset token to passsword table
         await prisma.$executeRaw`
             INSERT INTO "PasswordReset" ("userId", token, "expiresAt")
             VALUES (${user[0].id}, ${token}, NOW() + INTERVAL '1 hour')
         `;
 
-        // Send token via email
+        //sneding token via email
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {

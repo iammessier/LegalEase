@@ -7,7 +7,7 @@ export async function POST(request) {
     try {
         const { email, code } = await request.json();
 
-        // Using raw SQL to find user by email
+        //to find user
         const user = await prisma.$queryRaw`SELECT * FROM "User" WHERE email = ${email}`;
 
         if (!user || user.length === 0) {
@@ -18,7 +18,7 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Invalid verification code' }, { status: 400 });
         }
 
-        // Mark user as verified
+        //to mark user is verified
         await prisma.$executeRaw`
             UPDATE "User" SET "isVerified" = true, "verificationCode" = NULL WHERE id = ${user[0].id}
         `;
