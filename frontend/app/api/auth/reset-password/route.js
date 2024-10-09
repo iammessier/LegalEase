@@ -8,35 +8,31 @@ export async function POST(request) {
     try {
         const { email, token, newPassword } = await request.json();
 
-        // Find the reset token in the PasswordReset table
-        const passwordReset = await prisma.passwordReset.findFirst({
-            where: {
-                token, // Checking the token field
-                user: {
-                    email
-                },
-                expiresAt: { gt: new Date() } // Check that the token is still valid
-            },
-            include: { user: true }
-        });
+        //to find the reset token 
+        const passwordReset = await prisma.$queryRaw`
+            SELECT "PasswordReset".*, "User".* FROM "PasswordReset"
+            JOIN "User" ON "User".id = "PasswordReset"."userId"
+            WHERE "PasswordReset".token = ${token}
+            AND "User".email = ${email}
+            AND "PasswordReset"."expiresAt" > NOW()
+        `;
 
-        if (!passwordReset) {
+        if (!passwordReset || passwordReset.length === 0) {
             return NextResponse.json({ error: 'Invalid or expired token' }, { status: 400 });
         }
 
-        // Hash the new password
+        //to hash the paswdd
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update the user's password
-        await prisma.user.update({
-            where: { id: passwordReset.user.id },
-            data: { password: hashedPassword }
-        });
+        //to update user passwd
+        await prisma.$executeRaw`
+            UPDATE "User" SET password = ${hashedPassword} WHERE id = ${passwordReset[0].userId}
+        `;
 
-        // Optionally delete the token after use
-        await prisma.passwordReset.delete({
-            where: { id: passwordReset.id }
-        });
+        //to delete token after use
+        await prisma.$executeRaw`
+            DELETE FROM "PasswordReset" WHERE id = ${passwordReset[0].id}
+        `;
 
         return NextResponse.json({ message: 'Password reset successful' }, { status: 200 });
     } catch (error) {
