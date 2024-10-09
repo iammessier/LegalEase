@@ -18,14 +18,13 @@ export async function POST(request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        // Generate a secure token using crypto
         const token = crypto.randomBytes(32).toString('hex');
 
         // Store the token in the PasswordReset model
         await prisma.passwordReset.create({
-            data: {
+            data: { 
                 userId: user.id,
-                token, // Store the token
+                token,
                 expiresAt: new Date(Date.now() + 3600000) // Token valid for 1 hour
             }
         });
