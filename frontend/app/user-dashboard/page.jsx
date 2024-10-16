@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -19,7 +19,10 @@ export default function UserPage() {
   const [legalTopic, setLegalTopic] = useState('')
   const [questionTitle, setQuestionTitle] = useState('')
   const [questionDescription, setQuestionDescription] = useState('')
+  const [lawType, setLawType] = useState('')
   const [expandedResources, setExpandedResources] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [legalDocuments, setLegalDocuments] = useState([])
 
   const handleSubmitQuestion = (e) => {
     e.preventDefault()
@@ -27,8 +30,25 @@ export default function UserPage() {
     console.log('Question submitted:', { legalTopic, questionTitle, questionDescription })
   }
 
+  useEffect(() => {
+    // Simulating an API call that fetches legal documents
+    setLoading(true);
+    fetch('/api/auth/legal-documents') // Your API endpoint for fetching documents
+      .then((response) => response.json())
+      .then((data) => {
+        setLegalDocuments(data.data);
+        setLoading(false); // Stop loading once data is fetched
+      })
+      .catch((error) => {
+        console.error('Error fetching legal documents:', error);
+        setLoading(false); // Stop loading even in case of an error
+      });
+  },[searchQuery, expandedResources]);
+
   const toggleResources = (resource) => {
     setExpandedResources(expandedResources === resource ? null : resource);
+    setLegalTopic(resource);
+    handleSearch();
   }
 
   return (
@@ -156,47 +176,60 @@ export default function UserPage() {
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <BookOpenIcon className="h-6 w-6 mr-2 text-purple-600" />
-                Legal Library
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Input placeholder="Search legal documents..." className="mb-4" />
-              <h3 className="font-semibold mb-2">Popular Resources</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <Button 
-                  variant="outline"
-                  className="justify-start w-full bg-white text-black border border-gray-300"
-                  onClick={() => toggleResources('tenantRights')}>
-                  <BookOpenIcon className="h-4 w-4 mr-2" />
-                  Tenant Rights Guide
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="justify-start w-full bg-white text-black border border-gray-300"
-                  onClick={() => toggleResources('Small Business Regulations')}>
-                  <BookOpenIcon className="h-4 w-4 mr-2" />
-                  Small Business Regulations
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="justify-start w-full bg-white hover:bg-white hover:text-black text-black border border-gray-300"
-                  onClick={() => toggleResources('NDPS')}>
-                  <BookOpenIcon className="h-4 w-4 mr-2" />
-                  NDPS
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="justify-start w-full bg-white hover:bg-white hover:text-black text-black border border-gray-300"
-                  onClick={() => toggleResources('Traffic Rules')}>
-                  <BookOpenIcon className="h-4 w-4 mr-2" />
-                  Traffic Rules
-                </Button>
-              </div>
+        <CardHeader>
+        <CardTitle>Legal Library</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input 
+          placeholder="Search legal documents..." 
+          className="mb-4" 
+          value={searchQuery} 
+          onChange={(e) => setSearchQuery(e.target.value)} 
+        />
+        <Button onClick={handleSearch}>Search</Button> {/* Search Button */}
+          <h3 className="font-semibold mb-2">Popular Resources</h3>
+          {/* Legal Resources Buttons */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <Button 
+              variant="outline"
+              className="justify-start w-full bg-white text-black border border-gray-300"
+              onClick={() => toggleResources('tenantRights')}>
+              <BookOpenIcon className="h-4 w-4 mr-2" />
+              Tenant Rights Guide
+            </Button>
+            <Button 
+              variant="outline"
+              className="justify-start w-full bg-white text-black border border-gray-300"
+              onClick={() => toggleResources('Small Business Regulations')}>
+              <BookOpenIcon className="h-4 w-4 mr-2" />
+              Small Business Regulations
+            </Button>
+            <Button 
+              variant="outline"
+              className="justify-start w-full bg-white text-black border border-gray-300"
+              onClick={() => toggleResources('NDPS')}>
+              <BookOpenIcon className="h-4 w-4 mr-2" />
+              NDPS
+            </Button>
+            <Button 
+              variant="outline"
+              className="justify-start w-full bg-white text-black border border-gray-300"
+              onClick={() => toggleResources('Traffic Rules')}>
+              <BookOpenIcon className="h-4 w-4 mr-2" />
+              Traffic Rules
+            </Button>
+          </div>
 
-              
+          {/* Display Loading or Fetched Legal Documents */}
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul>
+          {legalDocuments.map((doc) => (
+            <li key={doc.id}>{doc.title}</li>
+          ))}
+        </ul>
+      )}
 
               {expandedResources === 'tenantRights' && (
                 <div className="mt-4 p-4 border border-gray-200 rounded-lg">
@@ -585,7 +618,7 @@ Remember to always follow traffic rules and regulations to ensure your safety an
               <AvatarFallback>LS</AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-semibold">Jane Doe</p>
+              <p className="font-semibold">Arpit Raikwar</p>
               <p className="text-sm text-gray-600">Family Law Specialist</p>
             </div>
           </div>
