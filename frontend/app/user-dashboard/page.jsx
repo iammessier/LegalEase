@@ -196,6 +196,8 @@ export default function UserPage() {
                 </Button>
               </div>
 
+              
+
               {expandedResources === 'tenantRights' && (
                 <div className="mt-4 p-4 border border-gray-200 rounded-lg">
                   <h3 className="font-bold text-black mb-2"><strong>Rent:</strong></h3>
@@ -394,6 +396,8 @@ Remember to always follow traffic rules and regulations to ensure your safety an
             </CardContent>
           </Card>
 
+
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -447,84 +451,151 @@ Remember to always follow traffic rules and regulations to ensure your safety an
           </Card>
         </div>
 
-        <div className="lg:w-1/4 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <MessageCircleIcon className="h-6 w-6 mr-2 text-purple-600" />
-                Real-Time Chat
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 mb-4">Connect with a law student or legal professional for immediate assistance.</p>
-              <Button className="w-full">
-                Start Chat
-              </Button>
-            </CardContent>
-          </Card>
+        <div className="space-y-6">
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center">
+        <UserIcon className="h-6 w-6 mr-2 text-purple-600" />
+        Find a Lawyer
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <ScrollArea className="h-[300px] pr-4">
+        <ul className="space-y-4">
+          <li className="flex items-center space-x-2">
+            <Avatar>
+              <AvatarImage src="https://randomuser.me/api/portraits/men/1.jpg" alt="Lawyer 1" />
+              <AvatarFallback>1</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-semibold">Vishesh Bairagi</p>
+              <p className="text-sm text-gray-600">Specialized in Criminal Law</p>
+            </div>
+          </li>
+          <li className="flex items-center space-x-2">
+            <Avatar>
+              <AvatarImage src="https://randomuser.me/api/portraits/men/6.jpg" alt="Lawyer 2" />
+              <AvatarFallback>2</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-semibold">Divyansh Tiwari</p>
+              <p className="text-sm text-gray-600">Specialized in Family Law</p>
+            </div>
+          </li>
+          <li className="flex items-center space-x-2">
+            <Avatar>
+              <AvatarImage src="https://randomuser.me/api/portraits/men/2.jpg" alt="Lawyer 3" />
+              <AvatarFallback>3</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-semibold">Ashmit Singh Parihar</p>
+              <p className="text-sm text-gray-600">Specialized in Business Law</p>
+            </div>
+          </li>
+          <li className="flex items-center space-x-2">
+            <Avatar>
+              <AvatarImage src="https://randomuser.me/api/portraits/men/18.jpg" alt="Lawyer 4" />
+              <AvatarFallback>4</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-semibold">Hussain Kanchwala</p>
+              <p className="text-sm text-gray-600">Specialized in Real Estate Law</p>
+            </div>
+          </li>
+          <li className="flex items-center space-x-2">
+            <Avatar>
+              <AvatarImage src="https://randomuser.me/api/portraits/men/3.jpg" alt="Lawyer 5" />
+              <AvatarFallback>5</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-semibold">Jayesh Fulgade</p>
+              <p className="text-sm text-gray-600">Specialized in Employment Law</p>
+            </div>
+          </li>
+        </ul>
+      </ScrollArea>
+    </CardContent>
+  </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <ShieldIcon className="h-6 w-6 mr-2 text-purple-600" />
-                Know Your Rights
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 mb-4">Quick access to legal rights information based on your location and topic.</p>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Location" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ca">California</SelectItem>
-                  <SelectItem value="ny">New York</SelectItem>
-                  <SelectItem value="tx">Texas</SelectItem>
-                  <SelectItem value="fl">Florida</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select className="mt-2">
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Topic" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="housing">Housing Rights</SelectItem>
-                  <SelectItem value="employment">Employment Rights</SelectItem>
-                  <SelectItem value="consumer">Consumer Rights</SelectItem>
-                  <SelectItem value="civil">Civil Rights</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button className="w-full mt-4">
-                Get Information
-              </Button>
-            </CardContent>
-          </Card>
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center">
+        <MessageCircleIcon className="h-6 w-6 mr-2 text-purple-600" />
+        Real-Time Chat
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p className="text-sm text-gray-600 mb-4">
+        Connect with a law student or legal professional for immediate assistance.
+      </p>
+      <Button className="w-full">Start Chat</Button>
+    </CardContent>
+  </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <StarIcon className="h-6 w-6 mr-2 text-purple-600" />
-                Top Rated Law Students
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[1, 2, 3].map((_, index) => (
-                  <div key={index} className="flex items-center space-x-4">
-                    <Avatar>
-                      <AvatarImage src={`/placeholder.svg?height=40&width=40`} />
-                      <AvatarFallback>LS</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-semibold">Jane Doe</p>
-                      <p className="text-sm text-gray-600">Family Law Specialist</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center">
+        <ShieldIcon className="h-6 w-6 mr-2 text-purple-600" />
+        Know Your Rights
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <p className="text-sm text-gray-600 mb-4">
+        Quick access to legal rights information based on your location and topic.
+      </p>
+      <Select>
+        <SelectTrigger>
+          <SelectValue placeholder="Select Location" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ca">California</SelectItem>
+          <SelectItem value="ny">New York</SelectItem>
+          <SelectItem value="tx">Texas</SelectItem>
+          <SelectItem value="fl">Florida</SelectItem>
+        </SelectContent>
+      </Select>
+      <Select className="mt-2">
+        <SelectTrigger>
+          <SelectValue placeholder="Select Topic" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="housing">Housing Rights</SelectItem>
+          <SelectItem value="employment">Employment Rights</SelectItem>
+          <SelectItem value="consumer">Consumer Rights</SelectItem>
+          <SelectItem value="civil">Civil Rights</SelectItem>
+        </SelectContent>
+      </Select>
+      <Button className="w-full mt-4">Get Information</Button>
+    </CardContent>
+  </Card>
+
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center">
+        <StarIcon className="h-6 w-6 mr-2 text-purple-600" />
+        Top Rated Law Students
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        {[1, 2, 3].map((_, index) => (
+          <div key={index} className="flex items-center space-x-4">
+            <Avatar>
+              <AvatarImage src={`/placeholder.svg?height=40&width=40`} />
+              <AvatarFallback>LS</AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-semibold">Jane Doe</p>
+              <p className="text-sm text-gray-600">Family Law Specialist</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </CardContent>
+  </Card>
+</div>
+
+
       </main>
       <footer
         className="w-full flex flex-col gap-2 sm:flex-row py-6 shrink-0 items-center px-4 md:px-6 border-t bg-white/50 backdrop-blur-sm mt-8">
