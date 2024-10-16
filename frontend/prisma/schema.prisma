@@ -1,12 +1,21 @@
+<<<<<<< HEAD
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+=======
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+>>>>>>> d496975398935ccbd141d8d001efca140113cc1d
 
 generator client {
   provider = "prisma-client-js"
 }
 
+<<<<<<< HEAD
 model User {
   id               Int              @id @default(autoincrement())
   email            String           @unique
@@ -57,4 +66,31 @@ enum UserRole {
   CLIENT
   LAW_STUDENT
   ADMIN
+=======
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id             Int      @id @default(autoincrement())
+  fullName       String
+  email          String   @unique
+  phone          String?
+  location       String
+  username       String   @unique
+  password       String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model lawstudent {
+  id          Int      @id @default(autoincrement())
+  fullName    String
+  email       String   @unique
+  username    String   @unique
+  password    String
+  expertise   String   // Area of legal expertise
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+>>>>>>> d496975398935ccbd141d8d001efca140113cc1d
 }
